@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Dashboard{% endblock %}</title>
+    {% block head   %}{% endblock %}
+    {% load static %} <!-- Load static files -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh; /* Ensure full viewport height */
+        }
+
+        /* Sidebar container */
+        nav.sidebar {
+            background-color: #2c3e50; /* Dark blue */
+            width: 250px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding-top: 20px;
+            transition: width 0.3s ease;
+            overflow-y: auto;  /* Enable vertical scrolling */
+        }
+
+        /* Sidebar collapsed */
+        nav.sidebar.collapsed {
+            width: 70px;
+        }
+
+        /* Sidebar logo */
+        nav.sidebar .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-bottom: 20px;
+        }
+
+        nav.sidebar .logo img {
+            width: 100px;  /* Increased the width */
+            height: auto;
+        }
+
+        /* Sidebar heading */
+        nav.sidebar h3 {
+            color: white;
+            padding-left: 15px;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 0;
+            margin-bottom: 10px;
+        }
+
+        /* Sidebar links */
+        nav.sidebar a {
+            display: flex;
+            align-items: center;
+            color: white;
+            padding: 15px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+
+        nav.sidebar a:hover {
+            background-color: #34495e;
+        }
+
+        nav.sidebar a i {
+            margin-right: 10px;
+            font-size: 18px;
+        }
+
+        nav.sidebar a span {
+            transition: opacity 0.3s ease;
+        }
+
+        /* When sidebar is collapsed, hide text and show only icons */
+        nav.sidebar.collapsed a span { /*important*/
+            opacity: 0;
+            width: 0;
+            overflow: hidden;
+        }
+
+        nav.sidebar.collapsed a {
+            justify-content: center;
+        }
+
+        nav.sidebar.collapsed a i {
+            margin: 0;
+        }
+
+        nav.sidebar.collapsed h3 {
+            display: none;
+        }
+
+        /* Main content */
+        main {
+            margin-left: 250px;
+            padding: 20px;
+            width: calc(100% - 250px);
+            transition: margin-left 0.3s ease, width 0.3s ease;
+        }
+
+        /* Adjust when sidebar is collapsed */
+        main.collapsed {
+            margin-left: 70px;
+            width: calc(100% - 70px);
+        }
+
+        /* Toggle button styling */
+        .toggle-btn {
+            position: fixed;
+            top: 20px;
+            left: 270px; /* Adjusted based on sidebar width */
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            z-index: 1000;
+            transition: left 0.3s ease;
+        }
+
+        /* When sidebar is collapsed, shift the button to the left */
+        .toggle-btn.collapsed {
+            left: 90px;
+        }
+
+        /* Icons */
+        .sidebar-icon {
+            width: 20px;
+            height: auto;
+            margin-right: 10px;
+        }
+
+        /* Sidebar section */
+        nav.sidebar .section {
+            padding: 15px;
+            color: #ecf0f1;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Toggle button -->
+    <button class="toggle-btn" id="toggle-btn" onclick="toggleSidebar()">☰</button>
+
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+        <!-- Logo -->
+        <div class="logo">
+            <img src="{% static 'myapp/Dynamic-removebg-preview.png' %}" alt="logo"> <!-- Static logo -->
+        </div>
+
+        <!-- Navigation section -->
+        <h3>Navigation</h3>
+        <a href="{% url 'home' %}"><i class="sidebar-icon">🏠</i> <span>Home</span></a>
+        <a href="{% url 'dashboard' %}"><i class="sidebar-icon">📊</i> <span>Dashboard v2</span></a>
+        <a href="#"><i class="sidebar-icon">🚦</i> <span>Trafficlight</span></a>
+        <a href="#"><i class="sidebar-icon">📷</i> <span>Camera</span></a>
+        <a href="#"><i class="sidebar-icon">👥</i> <span>Group</span></a>
+        <a href="#"><i class="sidebar-icon">🌊</i> <span>Green Wave</span></a>
+        <a href="#"><i class="sidebar-icon">🛠️</i> <span>Control</span></a>
+        <a href="#"><i class="sidebar-icon">🗺️</i> <span>Draw Map</span></a>
+        <a href="#"><i class="sidebar-icon">🕒</i> <span>Dashboard T.Time</span></a>
+        <a href="#"><i class="sidebar-icon">💻</i> <span>IP Test</span></a>
+        <a href="#"><i class="sidebar-icon">📈</i> <span>Result</span></a>
+
+        <!-- State section -->
+        <h3>State</h3>
+        <a href="#"><i class="sidebar-icon">📍</i> <span>PONT_04</span></a>
+        <a href="#"><i class="sidebar-icon">📍</i> <span>PONT_03</span></a>
+        <a href="#"><i class="sidebar-icon">📍</i> <span>MPP-JOH-001</span></a>
+        <a href="#"><i class="sidebar-icon">📍</i> <span>PONT_02</span></a>
+    </nav>
+
+    <!-- Main content area -->
+    <main id="main-content">
+        {% block content %}
+        <!-- Page-specific content goes here -->
+        {% endblock %}
+    </main>
+
+    <script>
+        function toggleSidebar() {
+            var sidebar = document.getElementById("sidebar");
+            var mainContent = document.getElementById("main-content");
+            var toggleBtn = document.getElementById("toggle-btn");
+
+            // Toggle sidebar and main content adjustments
+            sidebar.classList.toggle("collapsed");
+            mainContent.classList.toggle("collapsed");
+            toggleBtn.classList.toggle("collapsed");
+        }
+    </script>
+
+</body>
+</html>

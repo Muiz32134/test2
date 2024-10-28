@@ -1,0 +1,83 @@
+{% extends "base.html" %}  
+
+{% block title %}Dashboard{% endblock %}
+
+{% block header %}Welcome to the Dashboard Page{% endblock %}
+
+{% block content %}
+    <h2>Dashboard Overview</h2>
+
+    <!-- Add link to the Information page -->
+    <p><a href="{% url 'information' %}">Go to Information Page</a></p>
+
+    <!-- Widget Container -->
+    <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+        <!-- Pie Chart Widget for Online/Offline Status -->
+        <div style="width: 300px; background-color: #f4f4f4; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+            <h3>Status Overview</h3>
+            <div style="position: relative; height: 200px; width: 100%;">
+                <canvas id="statusPieChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Progress Bar Widget for Task Completion -->
+        <div style="width: 300px; background-color: #f4f4f4; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+            <h3>Task Completion</h3>
+            <p>Project Progress:</p>
+            <div style="background-color: #e4e4e4; border-radius: 8px; height: 24px; width: 100%;">
+                <div id="progress-bar" style="background-color: #4CAF50; height: 100%; width: 75%; border-radius: 8px;"></div>
+            </div>
+            <p style="text-align: right;">75% Complete</p>
+        </div>
+
+        <!-- Simple Table Widget -->
+        <div style="width: 300px; background-color: #f4f4f4; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+            <h3>Recent Activity</h3>
+            <table style="width: 100%; border-collapse: collapse;">
+                <tr>
+                    <th style="text-align: left; padding: 8px; background-color: #4CAF50; color: white;">Task</th>
+                    <th style="text-align: left; padding: 8px; background-color: #4CAF50; color: white;">Status</th>
+                </tr>
+                <tr>
+                    <td style="padding: 8px;">Update System</td>
+                    <td style="padding: 8px;">Complete</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px;">Backup Data</td>
+                    <td style="padding: 8px;">Pending</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Another Card Widget for Key Metrics -->
+        <div style="width: 300px; background-color: #f4f4f4; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+            <h3>Key Metrics</h3>
+            <p><strong>Active Users:</strong> 350</p>
+            <p><strong>System Uptime:</strong> 99.9%</p>
+        </div>
+    </div>
+
+    <!-- Including Chart.js for the Pie Chart -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Pie Chart for Online/Offline Status
+        var ctxPie = document.getElementById('statusPieChart').getContext('2d');
+        var statusPieChart = new Chart(ctxPie, {
+            type: 'pie',
+            data: {
+                labels: ['Online', 'Offline'],
+                datasets: [{
+                    label: 'Status',
+                    data: [70, 30], // Example: 70% Online, 30% Offline
+                    backgroundColor: ['#4CAF50', '#f44336'],
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                aspectRatio: 1,
+            }
+        });
+    </script>
+
+{% endblock %}

@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block header %}Welcome to the Dashboard Page{% endblock %}
+
+{% block head %}
+<!-- Leaflet -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<script defer src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<!-- Maplibre GL -->
+<link href="https://unpkg.com/maplibre-gl/dist/maplibre-gl.css" rel="stylesheet" />
+<script defer src="https://unpkg.com/maplibre-gl/dist/maplibre-gl.js"></script>
+
+<!-- Maplibre GL Leaflet -->
+<script defer src="https://unpkg.com/@maplibre/maplibre-gl-leaflet/leaflet-maplibre-gl.js"></script>
+
+<style>
+    .weather-map-container {
+        position: relative;
+        width: 100%;
+        height: 700px;
+        resize: both;
+        overflow: auto;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    .weather-box {
+        position: absolute;
+        top: 10px;
+        right: 20px;
+        z-index: 1000;
+        background-color: rgba(255, 255, 255, 0.8);
+        padding: 3px;
+        border-radius: 8px;
+        width: 200px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+    .camera-status-box {
+        position: absolute;
+        top: 10px;
+        left: 20px;
+        z-index: 1000;
+        background-color: rgba(255, 255, 255, 0.8);
+        padding: 10px;
+        margin-left: 5%;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+    #map {
+        width: 90%;
+        height: 100%;
+        margin-left: 1%;
+    }
+</style>
+
+{% endblock %}
+
+{% block content %}
+<div class="weather-map-container">
+    <div class="camera-status-box">
+        <h4>Camera Status</h4>
+        <p>Online: <span id="online-count">0</span></p>
+        <p>Offline: <span id="offline-count">0</span></p>
+    </div>
+    
+    <div id="map"></div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Simulated camera data (You can replace this with actual camera status data)
+            const cameras = [
+                { id: 1, status: 'online' },
+                { id: 2, status: 'offline' },
+                { id: 3, status: 'online' },
+                { id: 4, status: 'offline' },
+                { id: 5, status: 'online' }
+            ];
+
+            // Function to update camera counts
+            function updateCameraCounts() {
+                const onlineCount = cameras.filter(camera => camera.status === 'online').length;
+                const offlineCount = cameras.filter(camera => camera.status === 'offline').length;
+
+                document.getElementById('online-count').innerText = onlineCount;
+                document.getElementById('offline-count').innerText = offlineCount;
+            }
+
+            // Call the function to update counts
+            updateCameraCounts();
+
+            // Initialize the map
+            const map = L.map('map').setView([1.4856, 103.3879], 10);
+
+            // Add Maplibre GL Layer
+            L.maplibreGL({
+                style: 'https://tiles.openfreemap.org/styles/liberty',
+            }).addTo(map);
+
+            
+
+            // Add markers
+            const markers = [
+                [1.485933, 103.389338, "PONT_01"],
+                [1.489762, 103.390888, "PONT_02"],
+                [1.507856, 103.510880, "PONT_03"],
+                [1.483244, 103.405192, "PONT_04"],
+                [1.505803, 103.569061, "MPP-JOH-001"]
+            ];
+
+            markers.forEach(([lat, lon, title]) => {
+                L.marker([lat, lon])
+                    .addTo(map)
+                    .bindPopup(`<b>${title}</b><br><br>Route:<br>Phase:<br>Mode:<br>Act Green Time:<br><br>Time Plan:<br>MP Time:<br>Status:<br><br>Comm. Date:<br>Activation:<br>Date Expired:<br><br>`);
+            });
+        });
+    </script>
+
+    <div class="weather-box">
+        <a class="weatherwidget-io" href="https://forecast7.com/en/1d49103d39/pontian-district/" data-label_1="PONTIAN DISTRICT" data-label_2="WEATHER" data-theme="original">
+            PONTIAN DISTRICT WEATHER
+        </a>
+        <script>
+            (function(d, s, id) {
+                var js, fjs = d.getElementsByTagName(s)[0];
+                if (!d.getElementById(id)) {
+                    js = d.createElement(s);
+                    js.id = id;
+                    js.src = 'https://weatherwidget.io/js/widget.min.js';
+                    fjs.parentNode.insertBefore(js, fjs);
+                }
+            })(document, 'script', 'weatherwidget-io-js');
+        </script>
+    </div>
+</div>
+{% endblock %}
