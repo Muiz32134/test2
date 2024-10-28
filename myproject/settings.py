@@ -80,8 +80,12 @@ WSGI_APPLICATION = 'myproject.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgres',
+        'NAME': 'PONTIAN_DB',
+        'USER': 'Dyna',
+        'PASSWORD': 'Dyna1234',
+        'HOST': '143.198.81.111',  # or the IP address if the database is remote
+        'PORT': '5432',
     }
 }
 
